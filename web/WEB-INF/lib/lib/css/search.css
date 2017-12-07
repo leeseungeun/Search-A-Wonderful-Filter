@@ -1,0 +1,57 @@
+@CHARSET "UTF-8";
+/* Globals */
+/* Custom default button */
+.btn-default,
+.btn-default:hover,
+.btn-default:focus {
+  color: #333;
+  text-shadow: none; /* Prevent inheritence from `body` */
+  background-color: #fff;
+  border: 1px solid rgb(186,186,186);
+}
+@CHARSET "UTF-8";
+/* Base structure */
+.site-wrapper-inner {
+  display: table-cell;
+  vertical-align: top;
+}
+/* Cover */
+.cover-container {
+  margin-right: auto;
+  margin-left: auto;
+}
+.cover {
+  padding: 0 20px;
+}
+.cover-heading{
+	font-family: Geomanist;
+	font-weight: bold;
+	font-size: 45pt;
+	color:#000;
+	padding-bottom: 20px;
+	text-shadow: 0 1px 3px rgba(0,0,0,.5);
+	text-align: center;
+}
+.cover .btn-lg {
+  padding: 10px 20px;
+  font-weight: bold;
+}
+.searchArea{
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+}
+.searchInput{
+	height: 46px;
+	width: 90% !important;
+}
+.input-group-btn{
+	width: 0;
+}
+p{
+	text-align: center;
+}
+#goHomeWhenError:link,#goHomeWhenError:visited,#goHomeWhenError:hover,#goHomeWhenError:active{
+	color: black;
+	text-decoration: none;
+}
