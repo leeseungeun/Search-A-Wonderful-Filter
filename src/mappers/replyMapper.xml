@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.SWF.mapper.ReplyMapper">
+
+	<select id="selectList" resultType="ReplyDTO">
+		select * 
+		  from reply
+		 where bno = #{bno}
+		   and rhidden='H01'
+		 order by rno desc
+		 limit #{page.firstRecord},#{page.recordPerPage}
+	</select>
+
+	<select id="selectReplycnt" resultType="int">
+		select count(rno)
+		  from reply
+		 where bno = #{bno} 
+		   and rhidden='H01'
+	</select>
+	
+	<insert id="insertReply">
+		insert into reply(bno
+						 , rno
+						 , rwriter
+						 , rcont
+						 )
+		values(#{bno}
+	  		  ,(select ifnull(max(rno)+1,1)
+		  		  from reply rno
+		 		 where bno = #{bno} 
+				) 
+       		  ,#{rDto.rwriter}
+       		  ,#{rDto.rcont}
+       		  )
+	</insert>
+	
+	<update id="deleteReply">
+		update reply
+		   set rhidden='H00'
+		 where bno=#{bno}
+		   and rno=#{rno}
+	</update>
+	
+</mapper>

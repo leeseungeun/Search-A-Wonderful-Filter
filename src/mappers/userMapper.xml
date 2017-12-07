@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.SWF.mapper.UserMapper">
+	
+	<select id="selectSido" resultType="string">
+		select distinct sido
+  		  from zipcode
+	</select>
+	
+	<select id="selectGugun" resultType="string">
+		select distinct gugun
+  		  from zipcode
+ 		 where sido=#{sido}	
+	</select>
+	
+	<select id="selectDong" resultType="string">
+		select distinct dong
+ 		  from zipcode
+ 		 where gugun=#{gugun}	
+	</select>
+	
+	<select id="selectUser" resultType="UserDTO">
+		select * from user
+		 where email=#{email}
+	</select>
+	
+	<select id="selectWithSessionId" resultType="UserDTO">
+		select * from user
+		 where sessionid=#{sessionid}
+		   and sessionlimit > now() 
+	</select>
+	
+	<select id="selectMaxLogindt" resultType="AttendenceDTO">
+		select *
+ 		  from attendence
+		 where logindt= (
+						select max(logindt)
+				  		  from attendence
+				 		 where email = #{email}
+						)
+	</select>
+		
+	<insert id="insertUser">
+		insert into user(email
+				,upw
+                ,umsg
+                ,usecustomservice
+                ,birth
+                ,gender
+                ,region
+				)
+		  values(#{email}
+				,#{upw}
+                ,#{umsg}
+                ,#{usecustomservice}
+                ,#{birth}
+                ,#{gender}
+                ,#{region}
+                );
+	</insert>
+	
+	<update id="updateUser">
+		update user
+	   	   set umsg=#{uDto.umsg}
+		     , usecustomservice=#{uDto.usecustomservice}
+			 , birth=#{uDto.birth}
+		     , gender=#{uDto.gender}
+		     , region=#{uDto.region}
+		<if test="isPwChange=='1'.toString()">
+			 , upw=#{uDto.upw}
+		</if>
+		 where email=#{uDto.email}
+	</update>
+	
+	<update id="updateTmpPW">
+		update user
+   		   set upw=#{tmppw}
+   		 where email=#{email}
+	</update>
+	
+	<update id="updatePoint">
+		update user
+   		   set upoint= upoint+#{upoint}
+   		 where email=#{email}
+	</update>
+	
+	<update id="updatePointMinus">
+		update user
+   		   set upoint= upoint-#{upoint}
+   		 where email=#{email}
+	</update>
+	
+	<insert id="insertLoginInfo">
+		insert into attendence (
+								email
+							   ,loginseq
+							   )
+		values (#{email}
+			   ,#{loginseq}
+			   )	
+	</insert>
+		
+	<update id="updateSessionInfo">
+		update user
+   		   set sessionid=#{sessionid}
+   		     , sessionlimit=#{sessionlimit}
+   		 where email=#{email}
+	</update>
+</mapper>

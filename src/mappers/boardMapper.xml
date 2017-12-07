@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.SWF.mapper.BoardMapper">
+	
+	<select id="selectBno" resultType="int">
+		select ifnull(max(bno)+1,1) bno
+ 		  from  board
+	</select>
+	
+	<sql id="search">
+		<if test="searchType != null">
+			<if test="searchType=='bdiv'.toString()">
+				and bdiv = #{searchKeyword}
+			</if>
+			<if test="searchType=='bwriter'.toString()">
+				and bwriter like CONCAT('%',#{searchKeyword},'%')
+			</if>
+			<if test="searchType=='btitleOrbcont'.toString()">
+				and (btitle like CONCAT('%',#{searchKeyword},'%'))
+				 or (bcont like CONCAT('%',#{searchKeyword},'%'))
+			</if>
+		</if>
+	</sql>
+	
+	<select id="selectList" resultType="BoardDTO">
+		<![CDATA[
+		select *
+		 from board
+		where bno > 0
+		  and bhidden = 'H01'
+		]]>
+		<include refid="search"></include>
+		<![CDATA[
+		order by bno desc
+		limit #{firstRecord},#{recordPerPage}
+		]]> 
+	</select>
+	
+	<select id="selectRecordCount" resultType="int">
+		<![CDATA[
+		select count(bno)
+		 from board
+		where bno > 0
+		  and bhidden = 'H01'
+		]]>
+		<include refid="search"></include>
+	</select>
+	
+	<select id="selectBoard" resultType="BoardDTO">
+		select *
+		  from board
+		 where bno=#{bno}
+	</select>
+	
+	<select id="selectMap" resultType="MapDTO">
+		select *
+		  from map
+		 where bno=#{bno}
+	</select>
+	
+	<select id="replyCount" resultType="int">
+		select count(rno)
+		 from reply
+		where bno
+	</select>
+		
+	<insert id="insertBoard">
+		insert into board (bno
+						  ,bdiv
+						  ,btitle
+						  ,bwriter
+						  ,bcont
+						  )
+		values(#{bno}
+			  ,#{bdiv}
+			  ,#{btitle}
+			  ,#{bwriter}
+			  ,#{bcont}
+				)
+	</insert>
+
+	<insert id="insertMap">
+		insert into map
+		values(#{bno}
+				,#{maplatitude}
+				,#{maplongtitude}
+				,#{marklatitude}
+				,#{marklongtitude}
+				)
+	</insert>
+	
+	<update id="updateReplycnt">
+		update board
+		   set replycnt = replycnt+1
+		 where bno = #{bno} 
+	</update>
+	
+	<update id="deleteReplycnt">
+		update board
+		   set replycnt = replycnt-1
+		 where bno = #{bno} 
+	</update>
+	
+	<update id="updateViewcnt">
+		update board
+		   set viewcnt = viewcnt+1
+		 where bno=#{bno}
+	</update>
+	
+	<update id="adjustViewcnt">
+		update board
+		   set viewcnt = viewcnt-1
+		 where bno=#{bno}
+	</update>
+	
+	<update id="updateBoard">
+		update board 
+		   set bdiv = #{bdiv}
+		   	 , btitle=#{btitle}
+		   	 , bcont=#{bcont}
+		   	 , bupdt = now()
+		 where bno=#{bno}
+	</update>
+
+	<update id="updateMap">
+		update map
+		   set maplatitude=#{maplatitude}
+			 , maplongtitude=#{maplongtitude}
+			 , marklatitude=#{marklatitude}
+			 , marklongtitude=#{marklongtitude}
+		 where bno=#{bno} 
+	</update>
+	
+	<update id="updateHiddenStatus">
+		update board
+		   set bhidden='H00'
+		 where bno=#{bno}
+	</update>
+	
+</mapper>
