@@ -1,0 +1,12 @@
+@CHARSET "UTF-8";
+.myPage{
+	margin-top: 60px;
+}
+.pointDiv{
+  	width: 500px;
+  	padding: 15px;
+	margin: 0 auto;
+	text-align: right;
+	font: bold 14pt 맑은 고딕;
+	padding-bottom:0px;
+}
